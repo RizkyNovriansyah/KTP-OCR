@@ -8,3 +8,4 @@ pyparsing==2.4.7
 pytesseract==0.3.7
 python-dateutil==2.8.1
 six==1.15.0
+Django
