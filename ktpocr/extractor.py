@@ -46,7 +46,7 @@ class KTPOCR(object):
         return res
     
     def extract(self, extracted_result):
-        #print(extracted_result.replace('\n', ' -- '))
+        print(extracted_result.replace('\n', ' -- '))
         for word in extracted_result.split("\n"):
             if "NIK" in word:
                 word = word.split(':')
@@ -61,10 +61,14 @@ class KTPOCR(object):
             if "Tempat" in word:
                 word = word.split(':')
                 self.result.tanggal_lahir = re.search("([0-9]{2}\-[0-9]{2}\-[0-9]{4})", word[-1])[0]
-                self.result.tempat_lahir = word[-1].replace(self.result.tanggal_lahir, '')
+                tempat_lahir = word[-1].replace(self.result.tanggal_lahir, '')
+                if "." in tempat_lahir:
+                    tempat_lahir = "".join(tempat_lahir.split('.'))
+                self.result.tempat_lahir = tempat_lahir
                 continue
 
             if 'Darah' in word:
+                print(word)
                 self.result.jenis_kelamin = re.search("(LAKI-LAKI|LAKI|LELAKI|PEREMPUAN)", word)[0]
                 word = word.split(':')
                 try:
@@ -76,29 +80,49 @@ class KTPOCR(object):
             if 'NO.' in word:
                 self.result.alamat = self.result.alamat + ' '+word
             if "Kecamatan" in word:
-                self.result.kecamatan = word.split(':')[1].strip()
+                try:
+                    self.result.kecamatan = word.split(':')[1].strip()
+                except:
+                    self.result.kecamatan = ""
             if "Desa" in word:
+                print(word)
                 wrd = word.split()
                 desa = []
                 for wr in wrd:
+                    print("wr",wr)
                     if not 'desa' in wr.lower():
-                        desa.append(wr)
-                self.result.kelurahan_atau_desa = ''.join(wr)
+                        if wr != " " and wr != ":":
+                            desa.append(wr)
+                self.result.kelurahan_atau_desa = ' '.join(desa)
             if 'Kewarganegaraan' in word:
-                self.result.kewarganegaraan = word.split(':')[1].strip()
+                kewarganegaraan = word.split(':')[1].strip()
+                if "WNI" in kewarganegaraan:
+                    kewarganegaraan = "WNI"
+                self.result.kewarganegaraan = kewarganegaraan
             if 'Pekerjaan' in word:
                 wrod = word.split()
                 pekerjaan = []
                 for wr in wrod:
                     if not '-' in wr:
                         pekerjaan.append(wr)
-                self.result.pekerjaan = ' '.join(pekerjaan).replace('Pekerjaan', '').strip()
+                result_pekerjaan = ' '.join(pekerjaan).replace('Pekerjaan', '').strip()
+                if "PELAJAR" in word.split(':')[1]:
+                    result_pekerjaan = "PELAJAR/MAHASISWA"
+                self.result.pekerjaan = result_pekerjaan 
             if 'Agama' in word:
-                self.result.agama = word.replace('Agama',"").strip()
+                agama = word.replace('Agama',"").strip()
+                if "ISLAM" in agama :
+                    agama = "ISLAM"
+                self.result.agama = agama
             if 'Perkawinan' in word:
-                self.result.status_perkawinan = word.split(':')[1]
+                status_perkawinan = word.split(':')[1]
+                if "BELUM" in word.split(':')[1]:
+                    status_perkawinan = "BELUM KAWIN"
+                self.result.status_perkawinan = status_perkawinan
+                
             if "RTRW" in word:
-                word = word.replace("RTRW",'')
+                print(word)
+                word = word.replace("RT/RW",'')
                 self.result.rt = word.split('/')[0].strip()
                 self.result.rw = word.split('/')[1].strip()
 
