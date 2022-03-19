@@ -192,11 +192,13 @@ class KTPOCR(object):
 					agama = "ISLAM"
 				self.result.agama = agama
 			if 'Perkawinan' in word:
-				status_perkawinan = word.split(':')[1]
-				if "BELUM" in word.split(':')[1]:
-					status_perkawinan = "BELUM KAWIN"
-				self.result.status_perkawinan = status_perkawinan
-				
+				try:
+					status_perkawinan = word.split(':')[1]
+					if "BELUM" in word.split(':')[1]:
+						status_perkawinan = "BELUM KAWIN"
+					self.result.status_perkawinan = status_perkawinan
+				except:
+					self.result.status_perkawinan = ""
 			if "RTRW" in word:
 				print(word)
 				word = word.replace("RT/RW",'')
