@@ -111,6 +111,7 @@ class KTPOCR(object):
 	def extract(self, extracted_result):
 		# print(extracted_result.replace('\n', ' -- '))
 		for word in extracted_result.split("\n"):
+			print("word",word)
 			if "NIK" in word:
 				try:
 					word = word.split(':')
@@ -157,7 +158,6 @@ class KTPOCR(object):
 				except:
 					self.result.kecamatan = ""
 			if "Desa" in word:
-				print(word)
 				wrd = word.split()
 				desa = []
 				for wr in wrd:
@@ -167,7 +167,6 @@ class KTPOCR(object):
 							desa.append(wr)
 				self.result.kelurahan_atau_desa = ' '.join(desa)
 			if 'Kewarganegaraan' in word:
-				print("word",word)
 				try:
 					kewarganegaraan = word.split(':')[1].strip()
 					if "WNI" in kewarganegaraan:
@@ -182,7 +181,6 @@ class KTPOCR(object):
 					if not '-' in wr:
 						pekerjaan.append(wr)
 				result_pekerjaan = ' '.join(pekerjaan).replace('Pekerjaan', '').strip()
-				print("word",word)
 				if "PELAJAR" in result_pekerjaan:
 					result_pekerjaan = "PELAJAR/MAHASISWA"
 				self.result.pekerjaan = result_pekerjaan 
@@ -200,7 +198,6 @@ class KTPOCR(object):
 				except:
 					self.result.status_perkawinan = ""
 			if "RTRW" in word:
-				print(word)
 				word = word.replace("RT/RW",'')
 				try:
 					self.result.rt = word.split('/')[0].strip()
