@@ -128,3 +128,5 @@ dmypy.json
 #Local Files
 .vscode/
 env/
+djangocr/ktp_scan_hUiR910.jpg
+djangocr/media/*
