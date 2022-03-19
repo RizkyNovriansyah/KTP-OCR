@@ -112,13 +112,19 @@ class KTPOCR(object):
 		# print(extracted_result.replace('\n', ' -- '))
 		for word in extracted_result.split("\n"):
 			if "NIK" in word:
-				word = word.split(':')
-				self.result.nik = self.nik_extract(word[-1].replace(" ", ""))
+				try:
+					word = word.split(':')
+					self.result.nik = self.nik_extract(word[-1].replace(" ", ""))
+				except:
+					self.result.nik = ""
 				continue
 
 			if "Nama" in word:
 				word = word.split(':')
-				self.result.nama = word[-1].replace('Nama ','')
+				try:
+					self.result.nama = word[-1].replace('Nama ','')
+				except:
+					self.result.nama = ""
 				continue
 
 			if "Tempat" in word:
@@ -182,7 +188,7 @@ class KTPOCR(object):
 				self.result.pekerjaan = result_pekerjaan 
 			if 'Agama' in word:
 				agama = word.replace('Agama',"").strip()
-				if "ISLAM" in agama :
+				if "ISL" in agama :
 					agama = "ISLAM"
 				self.result.agama = agama
 			if 'Perkawinan' in word:
@@ -194,8 +200,14 @@ class KTPOCR(object):
 			if "RTRW" in word:
 				print(word)
 				word = word.replace("RT/RW",'')
-				self.result.rt = word.split('/')[0].strip()
-				self.result.rw = word.split('/')[1].strip()
+				try:
+					self.result.rt = word.split('/')[0].strip()
+				except:
+					self.result.rt = ""
+				try:					
+					self.result.rw = word.split('/')[1].strip()
+				except:
+					self.result.rw = ""
 
 	def master_process(self):
 		raw_text = self.process(self.image)
