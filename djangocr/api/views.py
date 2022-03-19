@@ -141,9 +141,9 @@ class KTPOCR(object):
 
 			if 'Darah' in word:
 				print(word)
-				self.result.jenis_kelamin = re.search("(LAKI-LAKI|LAKI|LELAKI|PEREMPUAN)", word)[0]
-				word = word.split(':')
 				try:
+					self.result.jenis_kelamin = re.search("(LAKI-LAKI|LAKI|LELAKI|PEREMPUAN)", word)[0]
+					word = word.split(':')
 					self.result.golongan_darah = re.search("(O|A|B|AB)", word[-1])[0]
 				except:
 					self.result.golongan_darah = '-'
